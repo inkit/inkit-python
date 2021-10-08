@@ -1,2 +1,4 @@
 class ResponseObject:
-    pass
+
+    def __init__(self, resp):
+        pass

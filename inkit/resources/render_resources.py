@@ -1,19 +1,7 @@
-from __future__ import absolute_import
-
-from inkit.resources.abstract_resources import (
-    CreatableResource,
-    RetrievableResource,
-    ListableResource,
-    UpdatableResource,
-    DeletableResource
-)
+from inkit.metaclasses import ResourceBuilderMetaclass
+from inkit.client import ClientRequest
 
 
-class RenderResource(
-    CreatableResource,
-    RetrievableResource,
-    ListableResource,
-    UpdatableResource,
-    DeletableResource
-):
-    _module_name = "renders"
+class RenderResource(metaclass=ResourceBuilderMetaclass):
+
+    client = ClientRequest()

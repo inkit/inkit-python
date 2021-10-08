@@ -1,5 +1,4 @@
-from __future__ import absolute_import
-
+import os
 import requests
 
 from urllib3.util.retry import Retry
@@ -12,6 +11,7 @@ from inkit.exceptions import InkitClientException
 
 
 HOST = 'https://api.inkit.com/v1'
+PUBLIC_ROUTING_CONFIG_PATH = 'public-routing-config-map'
 USER_AGENT = 'Inkit SDK'
 MAX_RETRIES = 3
 TIMEOUT = 10
@@ -33,6 +33,16 @@ class ClientRequest:
         session.mount(HOST, HTTPAdapter(max_retries=retries))
         session.headers.update({'User-Agent': USER_AGENT})
         return session
+
+    def fetch_routing_config_map(self):
+        resp = self._session.get(
+            url=os.path.join(HOST, PUBLIC_ROUTING_CONFIG_PATH),
+            timeout=TIMEOUT
+        )
+        if not resp.ok:
+            raise InkitClientException(f'Received {resp.status_code} status code, data: {resp.text}')
+
+        return ResponseObject(**resp.json())
 
     def send(self, url, http_method, data=None):
 
