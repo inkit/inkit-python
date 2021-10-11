@@ -1,0 +1,42 @@
+{
+  "render": {
+    "routes": [
+      {
+        "path": "render",
+        "http_method": "POST",
+        "sdk_method_name": "create",
+        "doc": "Creates new render\n\n:param str folder_id: Folder ID to save render Default folder will be used if not specified\n:param str template_id: Template ID to user for render\n:param str html: Base64 encoded html for render\n ..."
+      },
+      {
+        "path": "render",
+        "http_method": "GET",
+        "sdk_method_name": "list",
+        "doc": "Renders List"
+      },
+      {
+        "path": "render/{id}",
+        "http_method": "GET",
+        "sdk_method_name": "get",
+        "doc":"Retrieve render"
+      },
+      {
+        "path": "render/{id}",
+        "http_method": "DELETE",
+        "sdk_method_name": "delete",
+        "doc": "Delete render"
+      },
+      {
+        "path": "render/{id}/pdf",
+        "http_method": "GET",
+        "sdk_method_name": "get_pdf",
+        "doc": "Download render`s PDF"
+      },
+      {
+        "path": "render/{id}/html",
+        "http_method": "GET",
+        "sdk_method_name": "get_html",
+        "doc": "Download render`s HTML"
+      }
+    ]
+  }
+}

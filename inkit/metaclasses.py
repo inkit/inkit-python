@@ -1,48 +1,80 @@
 import re
-import inkit
-import functools
+import json
 
 from inkit.exceptions import InkitException
-from inkit.response_object import ResponseObject
 
 
 class ProductMetaclass(type):
 
-    def __new__(mcs, classname, superclasses, attr_dict):
-        raise InkitException(f'Class {classname} is not instantiable')
+    def __init__(cls, classname, superclasses, attr_dict):
+        super().__init__(classname, superclasses, attr_dict)
+        for handler in cls._main_resource.handlers:  # noqa
+            setattr(cls, handler, getattr(cls._main_resource, handler))  # noqa
 
-    def __getattribute__(cls, item):
-        return super().__getattribute__(item)
+    def __call__(cls, *args, **kwargs):
+        raise InkitException(f'Class {cls.__name__} is not instantiable')
 
 
 class ResourceBuilderMetaclass(type):
 
     def __new__(mcs, classname, superclasses, attr_dict):
-        attr_dict.update((
-            (route.sdk_method_name,
-             mcs.handlers_factory(http_method=route.method, resource_url=route.url))  # noqa
-            for route in inkit.routing_config_map
-        ))
+        mcs.set_validator(attr_dict)
+        mcs.set_handlers(attr_dict)
         return super().__new__(mcs, classname, superclasses, attr_dict)
 
     @staticmethod
-    def method_factory(resource_url, http_method):
-        if re.search(r'/{id}', resource_url):
+    def set_validator(attr_dict):
+        def check_request_data(path, http_method, data):
+            request_data = {
+                'path': path,
+                'http_method': http_method
+            }
+            if http_method.upper() in ('GET', 'DELETE') and data:
+                request_data.update(params={
+                    key.replace('_', '-', 1) if key.startswith('data_') else key: val
+                    for key, val in data.items()
+                })
+
+            if http_method.upper() in ('POST', 'PATCH'):
+                request_data.update(data=json.dumps(data))
+
+            return request_data
+
+        attr_dict[check_request_data.__name__] = staticmethod(check_request_data)
+
+    @classmethod
+    def set_handlers(mcs, attr_dict):
+        handlers = []
+        for route in attr_dict['routes']:
+            attr_dict[route.sdk_method_name] = mcs.handlers_factory(
+                resource_path=route.path,
+                http_method=route.http_method,
+                doc=route.doc
+            )
+            handlers.append(route.sdk_method_name)
+        attr_dict['handlers'] = handlers
+
+    @staticmethod
+    def handlers_factory(resource_path, http_method, doc):
+        if re.search(r'/{id}', resource_path):
             def handler(self, entity_id, **kwargs):
-                resp = self.client.send(
-                    url=resource_url.format(id=entity_id),
+                request_data = self.check_request_data(
+                    path=resource_path.format(id=entity_id),
                     http_method=http_method,
                     data=kwargs
                 )
-                return ResponseObject(**resp.josn)
+                return self.client.send(**request_data)
+            handler.__doc__ = doc
             return handler
 
         else:
             def handler(self, **kwargs):
-                resp = self.client.send(
-                    url=resource_url,
+                request_data = self.check_request_data(
+                    path=resource_path,
                     http_method=http_method,
                     data=kwargs
                 )
-                return ResponseObject(**resp.josn)
+                return self.client.send(**request_data)
+
+            handler.__doc__ = doc
         return handler

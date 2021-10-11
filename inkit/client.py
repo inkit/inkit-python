@@ -6,6 +6,7 @@ from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 
 import inkit
+
 from inkit.response_object import ResponseObject
 from inkit.exceptions import InkitClientException
 
@@ -17,7 +18,7 @@ MAX_RETRIES = 3
 TIMEOUT = 10
 
 
-class ClientRequest:
+class Client:
 
     def __init__(self):
         self._session = self._build_session()
@@ -31,53 +32,51 @@ class ClientRequest:
             status_forcelist=[500]
         )
         session.mount(HOST, HTTPAdapter(max_retries=retries))
-        session.headers.update({'User-Agent': USER_AGENT})
+        session.headers.update({
+            'User-Agent': USER_AGENT,
+            "Content-Type": "application/json"
+        })
         return session
 
+    # TODO: Public routing config map API is not implemented
     def fetch_routing_config_map(self):
         resp = self._session.get(
             url=os.path.join(HOST, PUBLIC_ROUTING_CONFIG_PATH),
             timeout=TIMEOUT
         )
         if not resp.ok:
-            raise InkitClientException(f'Received {resp.status_code} status code, data: {resp.text}')
+            raise InkitClientException(
+                message='API responded with invalid status code',
+                resp=ResponseObject(resp)
+            )
+        return ResponseObject(resp)
 
-        return ResponseObject(**resp.json())
-
-    def send(self, url, http_method, data=None):
-
+    def send(self, path, http_method, params=None, data=None):
         if not inkit.api_token:
-            raise InkitClientException('API Token is not specified')
+            raise InkitClientException(message='API Token is not specified')
 
         if not isinstance(inkit.api_token, str):
             raise TypeError(f'API Token must be a string, got {type(inkit.api_token)}')
 
-        method = getattr(self._session, http_method)
-
-        rq_kwargs = {
-            'url': url,
+        method = getattr(self._session, http_method.lower())
+        request_data = {
+            'url': os.path.join(HOST, path),
             'timeout': TIMEOUT,
             'headers': {'X-Inkit-API-Token': inkit.api_token}
         }
         if data:
-            rq_kwargs.update(data)
-
+            request_data.update(data=data)
+        if params:
+            request_data.update(params=params)
         try:
-            resp = method(**rq_kwargs)
+            resp = method(**request_data)
 
         except RequestException as e:
-            raise InkitClientException(original_exc=e)
+            raise InkitClientException(exc=e)
 
         if not resp.ok:
-            raise InkitClientException(f'Received {resp.status_code} status code, data: {resp.text}')
-
-        return ResponseObject(**resp.json())
-
-    def _build_url(self, chain, entity_id):
-        url = '{host}/{chain}'.format(
-            host=self.host,
-            chain='-'.join(chain.lower().split('.'))
-        )
-        if entity_id:
-            url += '/{}'.format(entity_id)
-        return url
+            raise InkitClientException(
+                message='API responded with invalid status code',
+                resp=ResponseObject(resp)
+            )
+        return ResponseObject(resp)
