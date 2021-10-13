@@ -1,15 +1,9 @@
-import os
 import json
 
 from collections import namedtuple
+from pkg_resources import resource_stream
 
 from inkit.exceptions import InkitRouterException
-
-
-ROUTING_CONFIG_MAP_FILENAME = os.path.join(
-    os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))),
-    'routing-config-map.json'
-)
 
 
 Route = namedtuple('Route', ['path', 'http_method', 'sdk_method_name', 'doc'])
@@ -17,8 +11,7 @@ Route = namedtuple('Route', ['path', 'http_method', 'sdk_method_name', 'doc'])
 
 class Router:
 
-    with open(ROUTING_CONFIG_MAP_FILENAME) as fp:
-        config_map = json.load(fp)
+    config_map = json.load(resource_stream('inkit', 'data/routing-config-map.json'))
 
     @classmethod
     def get_routes(cls, product_name):

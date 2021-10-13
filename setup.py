@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/inkitio/inkit-python",
     packages=setuptools.find_packages(),
+    package_data={'inkit': ['data/routing-config-map.json']},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
