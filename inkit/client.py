@@ -8,7 +8,7 @@ from requests.exceptions import RequestException
 import inkit
 
 from inkit.response_object import ResponseObject
-from inkit.exceptions import InkitClientException
+from inkit.exceptions import InkitClientException, InkitResponseException
 
 
 HOST = 'https://api.inkit.com/v1'
@@ -75,7 +75,7 @@ class Client:
             raise InkitClientException(exc=e)
 
         if not resp.ok:
-            raise InkitClientException(
+            raise InkitResponseException(
                 message='API responded with invalid status code',
                 resp=ResponseObject(resp)
             )

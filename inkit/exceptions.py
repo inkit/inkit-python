@@ -30,3 +30,8 @@ class InkitRouterException(InkitException):
 class InkitClientException(InkitException):
     """Raises when Client failed"""
     pass
+
+
+class InkitResponseException(InkitClientException):
+    """Raises when API response has aт unsuccessful status code"""
+    pass

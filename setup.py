@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="inkit",
-    version="1.0.3",
+    version="1.0.4",
     author="Inkit Inc",
     author_email="support@inkit.com",
     description="The world's leading Reach Enablement Platform",

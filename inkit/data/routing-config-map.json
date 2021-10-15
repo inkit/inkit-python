@@ -11,31 +11,31 @@
         "path": "render",
         "http_method": "GET",
         "sdk_method_name": "list",
-        "doc": "Renders List"
+        "doc": "Renders List\n\n:return: Render list\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       },
       {
         "path": "render/{id}",
         "http_method": "GET",
         "sdk_method_name": "get",
-        "doc": "Retrieve render"
+        "doc": "Retrieve render\n\n:return: Render\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       },
       {
         "path": "render/{id}",
         "http_method": "DELETE",
         "sdk_method_name": "delete",
-        "doc": "Delete render"
+        "doc": "Delete render\n\n:return: Empty response\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       },
       {
         "path": "render/{id}/pdf",
         "http_method": "GET",
         "sdk_method_name": "get_pdf",
-        "doc": "Download render`s PDF"
+        "doc": "Download render PDF\n\n:return: Render PDF\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       },
       {
         "path": "render/{id}/html",
         "http_method": "GET",
         "sdk_method_name": "get_html",
-        "doc": "Download render`s HTML"
+        "doc": "Download render HTML\n\n:return: Render HTML\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       }
     ]
   }
