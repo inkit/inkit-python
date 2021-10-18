@@ -17,7 +17,7 @@ help(inkit.Render.create)
 ```
 import inkit
 from inkit.exceptions import InkitResponseException
-...
+
 
 inkit.api_token = 'xxxxxtokenxxxxx'
 
@@ -59,5 +59,20 @@ resp = inkit.Render.list(
 )
 renders = resp.data.items
 
-...
+
+# Renders get PDF
+
+resp = inkit.Render.get_pdf('rend_12345')
+content = resp.content
+
+
+# Renders get HTML
+
+resp = inkit.Render.get_html('rend_12345')
+html = resp.text
+
+
+# Renders Delete
+
+resp = inkit.Render.delete('rend_12345')
 ```

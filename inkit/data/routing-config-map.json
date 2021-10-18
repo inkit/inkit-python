@@ -11,13 +11,13 @@
         "path": "render",
         "http_method": "GET",
         "sdk_method_name": "list",
-        "doc": "Renders List\n\n:return: Render list\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
+        "doc": "Renders list\n\n:return: Render list with pagination, filtering, sorting and search.\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       },
       {
         "path": "render/{id}",
         "http_method": "GET",
         "sdk_method_name": "get",
-        "doc": "Retrieve render\n\n:return: Render\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
+        "doc": "Retrieve render\n\n:param str entity_id: Render ID to be retrieved\n:return: Render\n:rtype: ResponseObject\n:raises InkitClientException: if API request failed"
       },
       {
         "path": "render/{id}",

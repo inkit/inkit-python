@@ -8,5 +8,10 @@ class ResponseObject:
         self.content_type = resp.headers['content-type']
         self.status_code = resp.status_code
         self.content = resp.content
-        self._json = resp.json() if self.content_type == 'application/json' else None
-        self.data = flat(self._json) if self._json else None
+        self.text = resp.text
+        self._json = None
+
+        if self.text and self.content_type == 'application/json':
+            self._json = resp.json()
+
+        self.data = flat(self._json)
