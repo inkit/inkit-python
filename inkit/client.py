@@ -12,7 +12,6 @@ from inkit.exceptions import InkitClientException, InkitResponseException
 
 
 HOST = 'https://api.inkit.com/v1'
-PUBLIC_ROUTING_CONFIG_PATH = 'public-routing-config-map'
 USER_AGENT = 'Inkit SDK'
 MAX_RETRIES = 3
 TIMEOUT = 10
@@ -37,19 +36,6 @@ class Client:
             "Content-Type": "application/json"
         })
         return session
-
-    # TODO: Public routing config map API is not implemented
-    def fetch_routing_config_map(self):
-        resp = self._session.get(
-            url=os.path.join(HOST, PUBLIC_ROUTING_CONFIG_PATH),
-            timeout=TIMEOUT
-        )
-        if not resp.ok:
-            raise InkitClientException(
-                message='API responded with invalid status code',
-                resp=ResponseObject(resp)
-            )
-        return ResponseObject(resp)
 
     def send(self, path, http_method, params=None, data=None):
         if not inkit.api_token:
