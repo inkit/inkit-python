@@ -26,7 +26,7 @@ inkit.api_token = 'xxxxxtokenxxxxx'
 
 try:
     resp = inkit.Render.create(
-        html='BASE64EncodedRenderHTML',
+        html='<html>My awesome HTML</html>',
         width=6.5,
         height=11.5,
         unit="in"
