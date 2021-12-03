@@ -14,7 +14,7 @@ from inkit.exceptions import InkitClientException, InkitResponseException
 HOST = 'https://api.inkit.com/v1'
 USER_AGENT = 'Inkit SDK'
 MAX_RETRIES = 3
-TIMEOUT = 10
+TIMEOUT = 15
 
 
 class Client:

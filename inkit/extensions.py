@@ -1,3 +1,6 @@
+import base64
+
+
 class AttrDict(dict):
 
     def __init__(self, *args, **kwargs):
@@ -13,3 +16,7 @@ def flat(data):
         return AttrDict({key: flat(val) for key, val in data.items()})
 
     return data
+
+
+def encode_html(html):
+    return base64.b64encode(html.encode()).decode()
