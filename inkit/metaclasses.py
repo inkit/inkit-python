@@ -35,7 +35,12 @@ class ResourceBuilderMetaclass(type):
                     key.replace('_', '-', 1) if key.startswith('data_') else key: val
                     for key, val in data.items()
                 })
-
+            if re.search(r'/(html|pdf|docx)$', path):
+                request_data.update(
+                    retry=3,
+                    retry_interval=1,
+                    status_forcelist=[404]
+                )
             if http_method.upper() in ('POST', 'PATCH'):
                 request_data.update(data=json.dumps({
                     key: encode_html(val) if key == 'html' else val
