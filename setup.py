@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="inkit",
-    version="1.0.2",
+    version="1.0.3",
     author="Inkit Inc",
-    author_email="support@inkit.com",
+    author_email="engineering@inkit.com",
     description="The world's leading Reach Enablement Platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/inkitio/inkit-python",
+    url="https://github.com/inkit/inkit-python",
     packages=setuptools.find_packages(),
     package_data={
         'inkit': ['data/routing-config-map.json']
