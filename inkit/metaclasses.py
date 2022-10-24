@@ -37,8 +37,8 @@ class ResourceBuilderMetaclass(type):
                 })
             if re.search(r'/(html|pdf|docx)$', path):
                 request_data.update(
-                    retry=3,
-                    retry_interval=1,
+                    retry=15,
+                    retry_interval=2,
                     status_forcelist=[404]
                 )
             if http_method.upper() in ('POST', 'PATCH'):
