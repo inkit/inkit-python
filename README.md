@@ -1,5 +1,5 @@
 # Inkit
-This is an Inkit SDK.
+This is an SDK to use with Inkit. Learn more at https://inkit.com or signup right away with https://app.inkit.com.
 
 ### Installing:
 
