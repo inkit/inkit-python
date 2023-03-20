@@ -18,5 +18,7 @@ def flat(data):
     return data
 
 
-def encode_html(html):
-    return base64.b64encode(html.encode()).decode()
+def base64encode(value):
+    if isinstance(value, str):
+        value = value.encode('utf-8')
+    return base64.b64encode(value).decode('utf-8')

@@ -5,80 +5,229 @@ This is an SDK to use with Inkit. Learn more at https://inkit.com or signup righ
 
 `pip install inkit`
 
-### Help:
-Check docstrings by typing:
-```
-import inkit
-
-help(inkit.Render.create)
-```
-
 ### Usage Examples:
 ```
 import inkit
-from inkit.exceptions import InkitResponseException
+from inkit.exceptions import InkitClientException, InkitResponseException
 
 
 inkit.api_token = 'xxxxxtokenxxxxx'
 
 
-# Renders Create
+# Get list of Folders
 
 try:
-    resp = inkit.Render.create(
-        html='<html>My awesome HTML</html>',
-        width=6.5,
-        height=11.5,
-        unit="in"
+    resp = inkit.Folder.list(
+        sort='created_at',
+        data_description='My'
     )
+
 except InkitResponseException as e:
-    logger.exception(
-        'Exception while creating render',
-        message=e.message,
-        data=e.response.data
-    )
+    e.message
+    e.response.data
 
-render_data = resp.data
-logger.info(f'Successfully created render {render_data.id}', data=render_data)
+except InkitClientException as e:
+    e.message
+
+else:
+    resp.data.items
 
 
-# Renders Retrieve
+# Create Template (HTML example with inkit_storage destination)
+
+resp = inkit.Template.create(
+    name='My HTML template',
+    source='html',
+    file='<html>My awesome HTML</html>',
+    data={
+        'width': 6.5,
+        'height': 11.5,
+        'unit': 'in'
+    },
+    destinations=[{  # inkit_storage
+        'id': 'dest_12345',
+        'folder_id': 'fold_12345',
+        'expire_after_n_views': 2,
+        'required': True,
+        'retain_for': {
+            'hours': 1
+        }
+    }]
+)
+resp.data
+
+
+# Create Template (DOCX example with inkit_storage and salesforce destinations)
+
+with open('path/to/your/file.docx', 'rb') as f:
+    docx = f.read()
+
+resp = inkit.Template.create(
+    name='My DOCX template',
+    source='docx',
+    file=docx,
+    data={
+        'file_name': 'DOCX template'
+    },
+    destinations=[
+        {
+            'id': 'dest_12345',
+            'folder_id': 'fold_12345',
+            'expire_after_n_views': 2,
+            'required': True
+        },
+        {
+            'id': 'dest_123456',
+            'type': 'file'
+        }
+    ]
+)
+resp.data
+
+
+# Get list of Templates
+
+resp = inkit.Template.list(
+    search='My',
+    sort='created_at',
+    page=1,
+    source='docx'
+)
+resp.data.items
+
+
+# Get single Template
+
+resp = inkit.Template.get('tmpl_12345')
+resp.data
+
+
+# Create Render
+
+resp = inkit.Render.create(
+    template_id='tmpl_12345',
+    merge_parameters={
+        'mp1': 'MP1',
+        'mp2': 'MP2'
+    },
+    destinations={
+        'inkit_storage': {
+            'name': 'My awesome render',
+            'description': 'My awesome render description'
+        },
+        'salesforce': {
+            'record_id': 'Your salesforce LinkedEntityId',
+            'file_name': 'My awesome PDF',
+            'description': 'Salesforce PDF description'
+        }
+    }
+)
+resp.data
+
+
+# Get single Render
 
 resp = inkit.Render.get('rend_12345')
-render_data = resp.data
+resp.data
 
 
-# Renders List
+# Get list of Renders
 
 resp = inkit.Render.list(
-    page_size=2,
-    page=2,
     sort='-created_at',
-    search='test',
-    data_id='rend_123,rend_1234,rend_id_12345'
+    page_size=2,
+    page=1,
+    destination_name='salesforce',
+    destination_status='completed'
 )
-renders = resp.data.items
+resp.data.items
 
 
-# Renders get PDF
+# Get PDF document
 
 resp = inkit.Render.get_pdf('rend_12345')
 content = resp.content
 
 
-# Renders get DOCX
+# Create renders Batch
 
-resp = inkit.Render.get_docx('rend_12345')
+resp = inkit.Batch.create(
+    template_id='tmpl_123456',
+    renders=[
+        {
+            'merge_parameters': {
+                'mp1': 'MP1',
+                'mp2': 'MP2'
+            },
+            'destinations': {
+                'inkit_storage': {
+                    'name': 'My first batch render',
+                    'description': 'My first batch render description'
+                },
+                'salesforce': {
+                    'record_id': 'Your salesforce LinkedEntityId',
+                    'file_name': 'My first awesome PDF',
+                    'description': 'Salesforce first PDF description'
+                }
+            }
+        },
+        {
+            'merge_parameters': {
+                'mp1': 'MP11',
+                'mp2': 'MP22'
+            },
+            'destinations': {
+                'inkit_storage': {
+                    'name': 'My second batch render'
+                },
+                'salesforce': {
+                    'record_id': 'Your salesforce LinkedEntityId',
+                    'file_name': 'My second awesome PDF',
+                    'description': 'Salesforce second PDF description'
+                }
+            }
+        }
+    ]
+)
+resp.data
+
+
+# Get list of renders Batches
+
+resp = inkit.Batch.list(
+    destination_name='inkit_storage'
+)
+resp.data.items
+
+
+# Get single renders Batch
+
+resp = inkit.Batch.get('rb_12345')
+resp.data
+
+
+# Get list of Documents
+
+resp = inkit.Document.list(
+    search='My'
+)
+resp.data.items
+
+
+# Get single Document
+
+resp = inkit.Document.get('doc_12345')
+resp.data
+
+
+# Delete Document
+
+resp = inkit.Document.delete('doc_12345')
+resp.status_code
+
+
+# Get PDF document
+
+resp = inkit.Document.download('doc_12345')
 content = resp.content
-
-
-# Renders get HTML
-
-resp = inkit.Render.get_html('rend_12345')
-html = resp.text
-
-
-# Renders Delete
-
-resp = inkit.Render.delete('rend_12345')
 ```

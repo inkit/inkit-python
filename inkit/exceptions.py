@@ -33,5 +33,5 @@ class InkitClientException(InkitException):
 
 
 class InkitResponseException(InkitClientException):
-    """Raises when API response has aт unsuccessful status code"""
+    """Raises when API response has unsuccessful status code"""
     pass
