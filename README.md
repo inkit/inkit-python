@@ -23,11 +23,11 @@ try:
     )
 
 except InkitResponseException as e:
-    print(e.message)
+    print(e)
     print(e.response.data)
 
 except InkitClientException as e:
-    print(e.message)
+    print(e)
 
 else:
     print(resp.data.items)
