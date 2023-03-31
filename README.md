@@ -23,14 +23,14 @@ try:
     )
 
 except InkitResponseException as e:
-    e.message
-    e.response.data
+    print(e.message)
+    print(e.response.data)
 
 except InkitClientException as e:
-    e.message
+    print(e.message)
 
 else:
-    resp.data.items
+    print(resp.data.items)
 
 
 # Create Template (HTML example with inkit_storage destination)
@@ -54,7 +54,7 @@ resp = inkit.Template.create(
         }
     }]
 )
-resp.data
+print(resp.data)
 
 
 # Create Template (DOCX example with inkit_storage and salesforce destinations)
@@ -82,7 +82,7 @@ resp = inkit.Template.create(
         }
     ]
 )
-resp.data
+print(resp.data)
 
 
 # Get list of Templates
@@ -93,13 +93,13 @@ resp = inkit.Template.list(
     page=1,
     source='docx'
 )
-resp.data.items
+print(resp.data.items)
 
 
 # Get single Template
 
 resp = inkit.Template.get('tmpl_12345')
-resp.data
+print(resp.data)
 
 
 # Create Render
@@ -122,13 +122,13 @@ resp = inkit.Render.create(
         }
     }
 )
-resp.data
+print(resp.data)
 
 
 # Get single Render
 
 resp = inkit.Render.get('rend_12345')
-resp.data
+print(resp.data)
 
 
 # Get list of Renders
@@ -140,13 +140,13 @@ resp = inkit.Render.list(
     destination_name='salesforce',
     destination_status='completed'
 )
-resp.data.items
+print(resp.data.items)
 
 
 # Get PDF document
 
 resp = inkit.Render.get_pdf('rend_12345')
-content = resp.content
+print(len(resp.content))
 
 
 # Create renders Batch
@@ -189,7 +189,7 @@ resp = inkit.Batch.create(
         }
     ]
 )
-resp.data
+print(resp.data)
 
 
 # Get list of renders Batches
@@ -197,13 +197,13 @@ resp.data
 resp = inkit.Batch.list(
     destination_name='inkit_storage'
 )
-resp.data.items
+print(resp.data.items)
 
 
 # Get single renders Batch
 
 resp = inkit.Batch.get('rb_12345')
-resp.data
+print(resp.data)
 
 
 # Get list of Documents
@@ -211,23 +211,23 @@ resp.data
 resp = inkit.Document.list(
     search='My'
 )
-resp.data.items
+print(resp.data.items)
 
 
 # Get single Document
 
 resp = inkit.Document.get('doc_12345')
-resp.data
+print(resp.data)
 
 
 # Delete Document
 
 resp = inkit.Document.delete('doc_12345')
-resp.status_code
+print(resp.status_code)
 
 
 # Get PDF document
 
 resp = inkit.Document.download('doc_12345')
-content = resp.content
+print(len(resp.content))
 ```
