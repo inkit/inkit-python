@@ -1,20 +1,17 @@
-import os
 import time
+from urllib.parse import urljoin
 
 import requests
-
 from requests.exceptions import RequestException
 
 import inkit
-
-from inkit.response_object import ResponseObject
 from inkit.exceptions import InkitClientException, InkitResponseException
+from inkit.response_object import ResponseObject
 
 
 HOST = 'https://api.inkit.com/v1'
 USER_AGENT = 'Inkit SDK'
-MAX_RETRIES = 3
-TIMEOUT = 15
+TIMEOUT = 20
 
 
 class Client:
@@ -31,17 +28,16 @@ class Client:
         })
         return session
 
-    def send(self, path, http_method, params=None, data=None,
-             retry=0, retry_interval=1, status_forcelist=None):
+    def send(self, path, http_method, params=None, data=None, retry=0, retry_interval=0, status_forcelist=None):
 
         if not inkit.api_token:
             raise InkitClientException(message='API Token is not specified')
 
         if not isinstance(inkit.api_token, str):
-            raise TypeError(f'API Token must be a string, got {type(inkit.api_token)}')
+            raise InkitClientException(message=f'API Token must be a string, got {type(inkit.api_token)}')
 
         request_data = {
-            'url': os.path.join(HOST, path),
+            'url': urljoin(HOST, path),
             'timeout': TIMEOUT,
             'headers': {'X-Inkit-API-Token': inkit.api_token}
         }
@@ -59,8 +55,7 @@ class Client:
             status_forcelist=status_forcelist or []
         )
 
-    def _send_request(self, method, request_data, retry,
-                      retry_interval, status_forcelist):
+    def _send_request(self, method, request_data, retry, retry_interval, status_forcelist):
 
         try:
             resp = method(**request_data)

@@ -1,12 +1,12 @@
 import json
-
 from collections import namedtuple
+
 from pkg_resources import resource_stream
 
 from inkit.exceptions import InkitRouterException
 
 
-Route = namedtuple('Route', ['path', 'http_method', 'sdk_method_name', 'doc'])
+Route = namedtuple('Route', ['path', 'http_method', 'sdk_method_name'])
 
 
 class Router:
@@ -18,8 +18,7 @@ class Router:
         routes = [
             Route(path=route['path'],
                   sdk_method_name=route['sdk_method_name'],
-                  http_method=route['http_method'],
-                  doc=route['doc'])
+                  http_method=route['http_method'])
             for route in cls.config_map[product_name]['routes']
         ]
         if not routes:

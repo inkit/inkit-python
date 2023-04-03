@@ -12,7 +12,10 @@ class InkitException(Exception):
             self._message = str(self.exc)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}: {self._message}"
+        return f"{self.__class__.__name__}: {self.message}"
+
+    def __str__(self):
+        return str(self.message)
 
     @property
     def message(self):
@@ -33,5 +36,5 @@ class InkitClientException(InkitException):
 
 
 class InkitResponseException(InkitClientException):
-    """Raises when API response has aт unsuccessful status code"""
+    """Raises when API response has unsuccessful status code"""
     pass
