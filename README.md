@@ -11,7 +11,7 @@ import inkit
 from inkit.exceptions import InkitClientException, InkitResponseException
 
 
-inkit.api_token = 'xxxxxtokenxxxxx'
+inkit.api_token = 'ENTER YOUR API KEY'
 
 
 # Get list of Folders
