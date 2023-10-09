@@ -11,7 +11,7 @@ import inkit
 from inkit.exceptions import InkitClientException, InkitResponseException
 
 
-inkit.api_token = 'xxxxxtokenxxxxx'
+inkit.api_token = 'ENTER YOUR API KEY'
 
 
 # Get list of Folders
@@ -117,6 +117,7 @@ resp = inkit.Render.create(
         },
         'salesforce': {
             'record_id': 'Your salesforce LinkedEntityId',
+            'salesforce_type': 'link',
             'file_name': 'My awesome PDF',
             'description': 'Salesforce PDF description'
         }
@@ -166,6 +167,7 @@ resp = inkit.Batch.create(
                 },
                 'salesforce': {
                     'record_id': 'Your salesforce LinkedEntityId',
+                    'salesforce_type': 'link',
                     'file_name': 'My first awesome PDF',
                     'description': 'Salesforce first PDF description'
                 }
@@ -182,6 +184,7 @@ resp = inkit.Batch.create(
                 },
                 'salesforce': {
                     'record_id': 'Your salesforce LinkedEntityId',
+                    'salesforce_type': 'link',
                     'file_name': 'My second awesome PDF',
                     'description': 'Salesforce second PDF description'
                 }
